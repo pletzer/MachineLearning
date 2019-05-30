@@ -1,0 +1,75 @@
+# Install the tensorflow-hub
+
+
+
+conda install -c conda-forge tensorflow-hub
+
+
+
+# Train the model 
+
+
+
+Download the retrain.py script
+
+"""
+
+curl -LO https://github.com/tensorflow/hub/raw/master/examples/image_retraining/retrain.py
+
+"""
+
+
+
+Retrain the model
+
+"""
+
+rm -rf output; mkdir -p output/intermediate; mkdir -p output/summaries
+
+time python retrain.py --image_dir=train_dataset_4 --output_graph=output/graph.pb --output_label=output/labels.txt --intermediate_output_graphs_dir=output/intermediate --summaries_dir=output/summaries --saved_model_dir=output/model
+
+"""
+
+python retrain.py --image_dir=train_dataset_4 \
+
+       --summary_dir=output/summaries --saved_model_dir=output/model \
+
+       --output_labels=output/labels.txt --output_graph=output/graph.pb
+
+"""
+
+
+
+# Check how well the training went
+
+
+
+"""
+
+tensorboard --logdir=/tmp/retrain_logs/
+
+"""
+
+
+
+(note the URL, copy paste in Chrome to see the graphics.)
+
+
+
+# Classify 
+
+
+
+Choose a picture from the train dataset:
+
+
+
+"""
+
+python label_image.py --image=$PWD/test_dataset_4/s2767.jpg \
+
+       --graph=output/graph.pb --labels=output/labels.txt \
+
+       --input_layer=Placeholder --output_layer=final_result
+
+

@@ -1,0 +1,16 @@
+# Download and install miniconda
+sh Miniconda3-latest-Linux-x86_64.sh 
+
+# check you're using the correct python (add to your PATH if necessary)
+which python
+$~/miniconda3/bin/python
+emacs ~/mystuff/.bash_profile
+
+# Get the scripts of the model
+wget https://github.com/tensorflow/hub/raw/master/examples/image_retraining/retrain.py
+wget https://github.com/tensorflow/hub/raw/master/examples/image_retraining/label_image.py
+wget https://github.com/tensorflow/tensorflow/blob/master/tensorflow/examples/label_image/label_image.py
+
+# Install tensorflow
+conda install -c conda-forge tensorflow-hub
+

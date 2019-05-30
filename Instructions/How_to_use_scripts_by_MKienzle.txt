@@ -1,0 +1,25 @@
+# CREATED 30 May 2019
+
+From within the directory containing folders Data; Instructions; Scripts
+
+# Create a dataset of images containing various numbers of dots
+cd Scripts/ProduceSyntheticData
+Rscript DrawDots.R
+cd ../..
+
+# using scripts in directory scripts
+cd Scripts/Tensorflow/
+
+python retrain.py --image_dir=../../Data/Synthetic/Dots \
+       --summary_dir=Synthetic/Dots/output/summaries --saved_model_dir=Synthetic/Dots/output/model \
+       --output_labels=Synthetic/Dots/output/labels.txt --output_graph=Synthetic/Dots/output/graph.pb
+
+tensorboard --logdir=/tmp/retrain_logs/
+
+python label_image.py --image=../../Data/Synthetic/Dots/3/img111.jpg \
+       --graph=Synthetic/Dots/output/graph.pb \
+       --labels=Synthetic/Dots/output/labels.txt \
+       --input_layer=Placeholder --output_layer=final_result
+
+
+cd ../..

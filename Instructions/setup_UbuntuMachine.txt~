@@ -1,0 +1,55 @@
+# Download and install miniconda
+sh Miniconda3-latest-Linux-x86_64.sh 
+
+# check you're using the correct python (add to your PATH if necessary)
+which python
+$~/miniconda3/bin/python
+emacs ~/mystuff/.bash_profile
+
+# Get the scripts of the model
+wget https://github.com/tensorflow/hub/raw/master/examples/image_retraining/retrain.py
+wget https://github.com/tensorflow/hub/raw/master/examples/image_retraining/label_image.py
+wget https://github.com/tensorflow/tensorflow/blob/master/tensorflow/examples/label_image/label_image.py
+
+# Install tensorflow
+conda install -c conda-forge tensorflow-hub
+ 1974  ls
+ 1975  which python
+ 1976  less retrain.py 
+ 1977  python retrain.py --image_dir=train_dataset_4 
+ 1978  emacs tmp.txt&
+ 1979  mkdir -p output/intermediate
+ 1980  mkdir -p output/summaries
+ 1981  python retrain.py --image_dir=data        --summary_dir=output/summaries --saved_model_dir=output/model        --output_labels=output/labels.txt --output_graph=output/graph.pb
+ 1982  tensorboard --logdir=/tmp/retrain_logs/
+ 1983  python label_image.py --image=data/3/111.jpg        --graph=output/graph.pb --labels=output/labels.txt        --input_layer=Placeholder --output_layer=final_result
+ 1984  wget https://raw.githubusercontent.com/tensorflow/tensorflow/master/tensorflow/examples/label_image/label_image.py
+ 1985  python label_image.py --image=data/3/111.jpg        --graph=output/graph.pb --labels=output/labels.txt        --input_layer=Placeholder --output_layer=final_result
+ 1986  less label_image.py
+ 1987  rm label_image.py
+ 1988  emacs label_image.py
+ 1989  python label_image.py --image=data/3/111.jpg        --graph=output/graph.pb --labels=output/labels.txt        --input_layer=Placeholder --output_layer=final_result
+ 1990  ls ~/Downloads/label_image.py -lt
+ 1991  cp ~/Downloads/label_image.py .
+ 1992  python label_image.py --image=data/3/111.jpg        --graph=output/graph.pb --labels=output/labels.txt        --input_layer=Placeholder --output_layer=final_result
+ 1993  ls
+ 1994  ls data/3/img111.jpg 
+ 1995  python label_image.py --image=data/3/img111.jpg        --graph=output/graph.pb --labels=output/labels.txt        --input_layer=Placeholder --output_layer=final_result
+ 1996  python label_image.py --image=data/5/img111.jpg        --graph=output/graph.pb --labels=output/labels.txt        --input_layer=Placeholder --output_layer=final_result
+ 1997  python label_image.py --image=data/1/img1.jpg        --graph=output/graph.pb --labels=output/labels.txt        --input_layer=Placeholder --output_layer=final_result
+ 1998  python label_image.py --image=data/1/img10.jpg        --graph=output/graph.pb --labels=output/labels.txt        --input_layer=Placeholder --output_layer=final_result
+ 1999  python label_image.py --image=data/1/img100.jpg        --graph=output/graph.pb --labels=output/labels.txt        --input_layer=Placeholder --output_layer=final_result
+ 2000  python label_image.py --image=data/3/img100.jpg        --graph=output/graph.pb --labels=output/labels.txt        --input_layer=Placeholder --output_layer=final_result
+ 2001  cd ~/mystuff/Programs/MachineLearning/
+ 2002  ls
+ 2003  ls data
+ 2004  mkdir Scripts
+ 2005  less retrain.py 
+ 2006  ls
+ 2007  ls data
+ 2008  mv Scripts scripts
+ 2009  ls
+ 2010  ls output/
+ 2011  ls scripts/
+ 2012  emacs instructions_to_train.txt&
+ 2013  history
