@@ -4,6 +4,10 @@ library("optparse")
 parser <- OptionParser()
 parser <- add_option(parser, c("-n", "--numberOfImages"), type="integer",
                      default=500, help="Number of images")
+parser <- add_option(parser, c("-r", "--minRange"), type="integer",
+                     default=1, help="Set min number of dots")
+parser <- add_option(parser, c("-R", "--maxRange"), type="integer",
+                     default=5, help="Set max number of dots")
 parser <- add_option(parser, c("-r", "--range"), type="integer",
                      default=5, help="Set max number of dots")
 parser <- add_option(parser, c("-s", "--seed"), type="integer",
@@ -20,16 +24,25 @@ set.seed(options$seed)
 # Where store the images
 StorageDIR <- options$directory
 
-# range of number of dots
-range.n = c(1, options$range)
-
 df <- data.frame("imageId"=rep(0, options$numberOfImages), "numberOfDots"=options$numberOfImages)
+
+# use directory name to label images
+for(n in options$minRange:options$maxRange) {
+    dirName <- paste(StorageDIR, "/", as.character(n), sep='')
+    print( paste('Creating ', dirName) )
+    dir.create(dirName, showWarnings=FALSE)
+}
 
 for(i in 1:options$numberOfImages) {
 
-    numDots <- as.integer(runif(1, min=range.n[1], max=range.n[2] + 1))
+    # random number of dots, note as.integer rounds to the lowest integer so add 1
+    numDots <- as.integer(runif(1, min=options$minRange, max=options$maxRange + 1))
+
+    # random position
     x <- runif(numDots, min = 0, max = 1)
     y <- runif(numDots, min = 0, max = 1)
+
+    # random dot size
     extent <- runif(numDots, min = 0.5, max = 2)
 
     df[i,"imageId"] = i
