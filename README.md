@@ -8,19 +8,19 @@ This project contains scripts to generate jpg images containing dots, lines and 
 
 You will need:
 
- * R installed with packages X, Y, Z
+ * R installed with packages plotrix, optparse
 
 ### Generate the training dataset
 
-[TO DO]
+```
+cd Scripts/ProduceSyntheticData
+Rscript DrawDots.R
+```
 
 ### Generate the test dataset
 
 [TO DO]
 
-## Evaluate your solution
-
-[Need to define measure of error]
 
 ### Submit your solution
 
