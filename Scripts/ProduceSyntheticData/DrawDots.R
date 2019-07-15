@@ -42,7 +42,7 @@ for(i in 1:options$numberOfImages) {
     jpeg(filename=paste(outputDir, "img", i, ".jpg", sep = ""), height = 40, width = 40)
     par(mai = rep(0,4))
     plot(x, y, cex=extent, xlim = c(0,1), ylim = c(0,1), axes = FALSE, xlab = "", ylab = "",
-         pch = 21, bg = "black", col = "white")
+         pch = 21, bg = rgb(0, 0, 0, 0.5), col = "white")
     dev.off()
 
 }
