@@ -1,0 +1,427 @@
+(base) pletzera@niwa-1019500 Tensorflow$ for line in $(cat ../../Data/Synthetic/Dots/test/test.csv); do
+>   id=$(echo $line | awk -F, '{print $2}')
+>   if [ $id != "\"imageId\"" ]; then
+>     numDots=$(echo $line | awk -F, '{print $3}')
+>     # classify
+>     echo "classifying img${id}.jpg"
+>     python label_image.py --image=../../Data/Synthetic/Dots/test/img${id}.jpg \
+>        --graph=output/graph.pb --labels=output/labels.txt \
+>        --input_layer=Placeholder --output_layer=final_result >& result.txt
+>     # find the most likely label
+>     gotNumDots=$(python findNumDots.py result.txt)
+>     diffSquare=$(python -c "print(($numDots - $gotNumDots)**2)")
+>     if [ $diffSquare != "0" ]; then
+>       echo "found $gotNumDots in img${id}.jpg but there were $numDots dots"
+>       numFailures=$(python -c "print($numFailures + 1)")
+>     else
+>       echo "found $numDots dots (correct)"
+>     fi
+>     # update the score
+>     score=$(python -c "print($score + $diffSquare)")
+>   fi
+> done
+classifying img1.jpg
+found 2 in img1.jpg but there were 4 dots
+classifying img2.jpg
+found 3 dots (correct)
+classifying img3.jpg
+found 3 in img3.jpg but there were 4 dots
+classifying img4.jpg
+found 4 dots (correct)
+classifying img5.jpg
+found 1 dots (correct)
+classifying img6.jpg
+found 5 dots (correct)
+classifying img7.jpg
+found 4 dots (correct)
+classifying img8.jpg
+found 2 dots (correct)
+classifying img9.jpg
+found 5 dots (correct)
+classifying img10.jpg
+found 4 in img10.jpg but there were 5 dots
+classifying img11.jpg
+found 2 dots (correct)
+classifying img12.jpg
+found 1 dots (correct)
+classifying img13.jpg
+found 4 dots (correct)
+classifying img14.jpg
+found 5 dots (correct)
+classifying img15.jpg
+found 1 dots (correct)
+classifying img16.jpg
+found 1 dots (correct)
+classifying img17.jpg
+found 2 dots (correct)
+classifying img18.jpg
+found 3 dots (correct)
+classifying img19.jpg
+found 5 in img19.jpg but there were 4 dots
+classifying img20.jpg
+found 5 dots (correct)
+classifying img21.jpg
+found 4 in img21.jpg but there were 5 dots
+classifying img22.jpg
+found 3 dots (correct)
+classifying img23.jpg
+found 1 in img23.jpg but there were 2 dots
+classifying img24.jpg
+found 3 in img24.jpg but there were 2 dots
+classifying img25.jpg
+found 2 dots (correct)
+classifying img26.jpg
+found 2 in img26.jpg but there were 3 dots
+classifying img27.jpg
+found 4 dots (correct)
+classifying img28.jpg
+found 1 dots (correct)
+classifying img29.jpg
+found 4 in img29.jpg but there were 3 dots
+classifying img30.jpg
+found 1 dots (correct)
+classifying img31.jpg
+found 4 in img31.jpg but there were 5 dots
+classifying img32.jpg
+found 5 dots (correct)
+classifying img33.jpg
+found 2 dots (correct)
+classifying img34.jpg
+found 2 dots (correct)
+classifying img35.jpg
+found 4 dots (correct)
+classifying img36.jpg
+found 2 in img36.jpg but there were 3 dots
+classifying img37.jpg
+found 4 dots (correct)
+classifying img38.jpg
+found 5 dots (correct)
+classifying img39.jpg
+found 5 dots (correct)
+classifying img40.jpg
+found 5 in img40.jpg but there were 4 dots
+classifying img41.jpg
+found 5 dots (correct)
+classifying img42.jpg
+found 3 in img42.jpg but there were 4 dots
+classifying img43.jpg
+found 1 dots (correct)
+classifying img44.jpg
+found 4 dots (correct)
+classifying img45.jpg
+found 1 dots (correct)
+classifying img46.jpg
+found 2 dots (correct)
+classifying img47.jpg
+found 3 in img47.jpg but there were 4 dots
+classifying img48.jpg
+found 4 dots (correct)
+classifying img49.jpg
+found 1 dots (correct)
+classifying img50.jpg
+found 1 dots (correct)
+classifying img51.jpg
+found 5 dots (correct)
+classifying img52.jpg
+found 3 dots (correct)
+classifying img53.jpg
+found 4 dots (correct)
+classifying img54.jpg
+found 3 in img54.jpg but there were 2 dots
+classifying img55.jpg
+found 1 dots (correct)
+classifying img56.jpg
+found 2 dots (correct)
+classifying img57.jpg
+found 3 dots (correct)
+classifying img58.jpg
+found 2 in img58.jpg but there were 3 dots
+classifying img59.jpg
+found 3 dots (correct)
+classifying img60.jpg
+found 3 dots (correct)
+classifying img61.jpg
+found 1 dots (correct)
+classifying img62.jpg
+found 3 in img62.jpg but there were 2 dots
+classifying img63.jpg
+found 4 in img63.jpg but there were 5 dots
+classifying img64.jpg
+found 4 in img64.jpg but there were 3 dots
+classifying img65.jpg
+found 5 dots (correct)
+classifying img66.jpg
+found 1 in img66.jpg but there were 2 dots
+classifying img67.jpg
+found 1 dots (correct)
+classifying img68.jpg
+found 2 dots (correct)
+classifying img69.jpg
+found 1 dots (correct)
+classifying img70.jpg
+found 1 dots (correct)
+classifying img71.jpg
+found 5 in img71.jpg but there were 4 dots
+classifying img72.jpg
+found 2 in img72.jpg but there were 3 dots
+classifying img73.jpg
+found 5 dots (correct)
+classifying img74.jpg
+found 1 dots (correct)
+classifying img75.jpg
+found 2 dots (correct)
+classifying img76.jpg
+found 4 dots (correct)
+classifying img77.jpg
+found 5 in img77.jpg but there were 4 dots
+classifying img78.jpg
+found 2 dots (correct)
+classifying img79.jpg
+found 5 dots (correct)
+classifying img80.jpg
+found 1 dots (correct)
+classifying img81.jpg
+found 5 dots (correct)
+classifying img82.jpg
+found 5 dots (correct)
+classifying img83.jpg
+found 2 dots (correct)
+classifying img84.jpg
+found 4 dots (correct)
+classifying img85.jpg
+found 1 dots (correct)
+classifying img86.jpg
+found 1 dots (correct)
+classifying img87.jpg
+found 4 in img87.jpg but there were 3 dots
+classifying img88.jpg
+found 2 dots (correct)
+classifying img89.jpg
+found 2 dots (correct)
+classifying img90.jpg
+found 5 in img90.jpg but there were 4 dots
+classifying img91.jpg
+found 2 dots (correct)
+classifying img92.jpg
+found 1 dots (correct)
+classifying img93.jpg
+found 2 dots (correct)
+classifying img94.jpg
+found 4 in img94.jpg but there were 5 dots
+classifying img95.jpg
+found 4 dots (correct)
+classifying img96.jpg
+found 5 in img96.jpg but there were 4 dots
+classifying img97.jpg
+found 5 dots (correct)
+classifying img98.jpg
+found 2 dots (correct)
+classifying img99.jpg
+found 4 dots (correct)
+classifying img100.jpg
+found 3 dots (correct)
+classifying img101.jpg
+found 5 dots (correct)
+classifying img102.jpg
+found 3 dots (correct)
+classifying img103.jpg
+found 5 dots (correct)
+classifying img104.jpg
+found 4 dots (correct)
+classifying img105.jpg
+found 3 in img105.jpg but there were 4 dots
+classifying img106.jpg
+found 2 dots (correct)
+classifying img107.jpg
+found 5 dots (correct)
+classifying img108.jpg
+found 3 in img108.jpg but there were 2 dots
+classifying img109.jpg
+found 4 dots (correct)
+classifying img110.jpg
+found 5 dots (correct)
+classifying img111.jpg
+found 1 dots (correct)
+classifying img112.jpg
+found 3 in img112.jpg but there were 4 dots
+classifying img113.jpg
+found 3 in img113.jpg but there were 4 dots
+classifying img114.jpg
+found 4 dots (correct)
+classifying img115.jpg
+found 2 dots (correct)
+classifying img116.jpg
+found 1 dots (correct)
+classifying img117.jpg
+found 3 dots (correct)
+classifying img118.jpg
+found 2 dots (correct)
+classifying img119.jpg
+found 3 dots (correct)
+classifying img120.jpg
+found 1 dots (correct)
+classifying img121.jpg
+found 4 dots (correct)
+classifying img122.jpg
+found 1 dots (correct)
+classifying img123.jpg
+found 2 in img123.jpg but there were 3 dots
+classifying img124.jpg
+found 4 in img124.jpg but there were 5 dots
+classifying img125.jpg
+found 3 dots (correct)
+classifying img126.jpg
+found 4 in img126.jpg but there were 5 dots
+classifying img127.jpg
+found 5 dots (correct)
+classifying img128.jpg
+found 5 dots (correct)
+classifying img129.jpg
+found 5 in img129.jpg but there were 4 dots
+classifying img130.jpg
+found 1 dots (correct)
+classifying img131.jpg
+found 3 in img131.jpg but there were 2 dots
+classifying img132.jpg
+found 3 dots (correct)
+classifying img133.jpg
+found 3 dots (correct)
+classifying img134.jpg
+found 1 dots (correct)
+classifying img135.jpg
+found 2 dots (correct)
+classifying img136.jpg
+found 3 dots (correct)
+classifying img137.jpg
+found 5 dots (correct)
+classifying img138.jpg
+found 1 in img138.jpg but there were 2 dots
+classifying img139.jpg
+found 4 in img139.jpg but there were 5 dots
+classifying img140.jpg
+found 3 dots (correct)
+classifying img141.jpg
+found 2 dots (correct)
+classifying img142.jpg
+found 1 dots (correct)
+classifying img143.jpg
+found 2 dots (correct)
+classifying img144.jpg
+found 5 dots (correct)
+classifying img145.jpg
+found 2 dots (correct)
+classifying img146.jpg
+found 5 in img146.jpg but there were 4 dots
+classifying img147.jpg
+found 2 dots (correct)
+classifying img148.jpg
+found 5 dots (correct)
+classifying img149.jpg
+found 4 dots (correct)
+classifying img150.jpg
+found 3 in img150.jpg but there were 2 dots
+classifying img151.jpg
+found 1 dots (correct)
+classifying img152.jpg
+found 1 dots (correct)
+classifying img153.jpg
+found 1 dots (correct)
+classifying img154.jpg
+found 3 dots (correct)
+classifying img155.jpg
+found 5 dots (correct)
+classifying img156.jpg
+found 5 dots (correct)
+classifying img157.jpg
+found 5 in img157.jpg but there were 4 dots
+classifying img158.jpg
+found 4 dots (correct)
+classifying img159.jpg
+found 2 dots (correct)
+classifying img160.jpg
+found 1 dots (correct)
+classifying img161.jpg
+found 4 dots (correct)
+classifying img162.jpg
+found 4 dots (correct)
+classifying img163.jpg
+found 3 dots (correct)
+classifying img164.jpg
+found 3 dots (correct)
+classifying img165.jpg
+found 2 dots (correct)
+classifying img166.jpg
+found 1 dots (correct)
+classifying img167.jpg
+found 1 dots (correct)
+classifying img168.jpg
+found 1 dots (correct)
+classifying img169.jpg
+found 5 dots (correct)
+classifying img170.jpg
+found 1 dots (correct)
+classifying img171.jpg
+found 5 dots (correct)
+classifying img172.jpg
+found 5 dots (correct)
+classifying img173.jpg
+found 5 dots (correct)
+classifying img174.jpg
+found 2 dots (correct)
+classifying img175.jpg
+found 2 dots (correct)
+classifying img176.jpg
+found 5 dots (correct)
+classifying img177.jpg
+found 1 dots (correct)
+classifying img178.jpg
+found 5 dots (correct)
+classifying img179.jpg
+found 2 in img179.jpg but there were 3 dots
+classifying img180.jpg
+found 4 in img180.jpg but there were 5 dots
+classifying img181.jpg
+found 4 dots (correct)
+classifying img182.jpg
+found 1 dots (correct)
+classifying img183.jpg
+found 3 dots (correct)
+classifying img184.jpg
+found 4 dots (correct)
+classifying img185.jpg
+found 5 in img185.jpg but there were 4 dots
+classifying img186.jpg
+found 2 in img186.jpg but there were 3 dots
+classifying img187.jpg
+found 1 dots (correct)
+classifying img188.jpg
+found 5 dots (correct)
+classifying img189.jpg
+found 1 dots (correct)
+classifying img190.jpg
+found 4 in img190.jpg but there were 3 dots
+classifying img191.jpg
+found 4 in img191.jpg but there were 3 dots
+classifying img192.jpg
+found 3 in img192.jpg but there were 5 dots
+classifying img193.jpg
+found 2 dots (correct)
+classifying img194.jpg
+found 3 dots (correct)
+classifying img195.jpg
+found 4 dots (correct)
+classifying img196.jpg
+found 1 dots (correct)
+classifying img197.jpg
+found 3 dots (correct)
+classifying img198.jpg
+found 1 dots (correct)
+classifying img199.jpg
+found 3 dots (correct)
+classifying img200.jpg
+found 1 dots (correct)
+(base) pletzera@niwa-1019500 Tensorflow$ echo "score is $score"
+score is 54
+(base) pletzera@niwa-1019500 Tensorflow$ echo "number of failures: $numFailures"
+number of failures: 48
+
