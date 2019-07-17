@@ -33,7 +33,7 @@ trainingOutput = trainingLabels['numberOfDots'][:]
 trainingInput = loadImages(glob.glob(trainingDir + 'img*.jpg'))
 
 # now train the data
-clf = svm.SVC(gamma=0.001, C=100.)
+clf = svm.SVC(kernel='rbf', gamma='scale', random_state=567)
 clf.fit(trainingInput, trainingOutput)
 
 # test
