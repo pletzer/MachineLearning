@@ -47,7 +47,7 @@ for(i in 1:options$numberOfImages) {
     	 height = options$width, width = options$width, quality = options$quality)
     par(mai = rep(0,4))
     plot(x, y, cex=extent, xlim = c(0,1), ylim = c(0,1), axes = FALSE, xlab = "", ylab = "",
-         pch = 21, bg = rgb(0, 0, 0, 0.5), col = "white")
+         pch = 21, bg = rgb(0, 0, 0, 0.5), col = rgb(1, 1, 1, 0))
     dev.off()
 
 }
