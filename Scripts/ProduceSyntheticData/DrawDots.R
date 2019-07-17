@@ -24,7 +24,7 @@ set.seed(options$seed)
 
 # Where to store the images
 outputDir <- paste(options$outputDir, "/", sep='')
-dir.create(outputDir, showWarnings=FALSE)
+dir.create(outputDir, showWarnings=FALSE, recursive=TRUE)
 
 df <- data.frame("imageId"=rep(0, options$numberOfImages), "numberOfDots"=options$numberOfImages)
 
