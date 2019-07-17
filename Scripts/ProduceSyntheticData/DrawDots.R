@@ -14,6 +14,10 @@ parser <- add_option(parser, c("-o", "--outputDir"),
                      default="../../Data/Synthetic/Dots/train", help="Set output directory")
 parser <- add_option(parser, c("-c", "--csvFile"),
                      default="train.csv", help="Set CSV file name containing number of dots for each image")
+parser <- add_option(parser, c("-w", "--width"), type="integer",
+                     default=40, help="Number of x and y pixels")
+parser <- add_option(parser, c("-q", "--quality"), type="integer",
+                     default=75, help="Image quality between 1 and 100, 100 is best")
 options <- parse_args(parser)
 
 set.seed(options$seed)
@@ -39,7 +43,8 @@ for(i in 1:options$numberOfImages) {
     df[i,"imageId"] = i
     df[i, "numberOfDots"] = numDots
 
-    jpeg(filename=paste(outputDir, "img", i, ".jpg", sep = ""), height = 400, width = 400, quality = 100, res = 500)
+    jpeg(filename=paste(outputDir, "img", i, ".jpg", sep = ""), 
+    	 height = options$width, width = options$width, quality = options$quality)
     par(mai = rep(0,4))
     plot(x, y, cex=extent, xlim = c(0,1), ylim = c(0,1), axes = FALSE, xlab = "", ylab = "",
          pch = 21, bg = rgb(0, 0, 0, 0.5), col = "white")
@@ -47,4 +52,6 @@ for(i in 1:options$numberOfImages) {
 
 }
 
+cat('image files written to ', outputDir, '\n')
 write.csv(df, file=paste(outputDir, options$csvFile, sep=""))
+cat('file ', options$csvFile, ' written to ', outputDir, '\n')
