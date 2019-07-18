@@ -95,7 +95,7 @@ print('score = {} number of failures = {}'.format(score, numFailures))
 
 print('prediction for the first 5 images: {}'.format(trainingOutput[:5] + 1))
 
-# plot training dataset
+# plot training/test dataset
 from matplotlib import pylab
 for i in range(10):
 	pylab.subplot(2, 10, i + 1)
