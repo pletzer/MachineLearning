@@ -1,10 +1,14 @@
 import numpy
-from sklearn import svm, metrics
+import tensorflow as tf
+from tensorflow import keras
 import argparse
 import cv2
 import glob
 import pandas
 import re
+from numpy.random import seed
+
+seed(13435)
 
 def loadImages(filenames):
 	"""
@@ -22,7 +26,6 @@ def loadImages(filenames):
 		# extract the index from the file name
 		index = int(re.search(r'img(\d+).jpg', fn).group(1)) - 1
 		im = cv2.imread(fn)
-    # average the R, G, B channels and flatten array
 		inputData[index,:] = (im.mean(axis=2)/255.).flat
 	return inputData
 
@@ -63,24 +66,38 @@ print('Number of testing images : {}'.format(testingInput.shape[0]))
 print('Image size               : {} x {}'.format(n0, n1))
 print('Categories               : {} min/max = {}/{}'.format(categories, minNumDots, maxNumDots))
 
-clf = svm.SVC(kernel='rbf', gamma='scale', verbose=True, random_state=567)
+clf = keras.Sequential([
+    #keras.layers.Flatten(input_shape=(n0, n1)),
+    keras.layers.Dense(128, activation=tf.nn.relu),
+    keras.layers.Dense(numCategories, activation=tf.nn.softmax)
+])
 
+clf.compile(optimizer='adam',
+            loss='sparse_categorical_crossentropy',
+            metrics=['accuracy'])
 # now train
-clf.fit(trainingInput, trainingOutput)
+clf.fit(trainingInput, trainingOutput, epochs=10)
 
 # test
-prediction = clf.predict(testingInput)
-numDots = prediction + 1
+predictions = clf.predict(testingInput)
+
+# predictions returns an array of probabilities for each label
+bestGuessInds = numpy.argmax(predictions, axis=1)
+cats = numpy.array([i for i in range(numCategories)])
+c = cats[bestGuessInds]
+print(cats)
+print(predictions[:5, :])
+print(c[:5])
 
 # compute score
-diffs = (numDots - testingOutput)**2
+diffs = (c - testingOutput)**2
 score = diffs.sum()
 numFailures = (diffs != 0).sum()
 
 print('score = {} number of failures = {}'.format(score, numFailures))
 
-print('known number of dots for the first 5 testing images: {}'.format(testingOutput[:5] + 1))
-print('inferred number dots for the first 5 testing images: {}'.format(prediction[:5] + 1))
+print('known number of dots for the first 5 images   : {}'.format(testingOutput[:5] + 1))
+print('inferred number of dots for the first 5 images: {}'.format(c[:5] + 1))
 
 # plot training/test dataset
 from matplotlib import pylab
@@ -88,7 +105,7 @@ n = 30
 for i in range(n):
 	pylab.subplot(n//10, 10, i + 1)
 	pylab.imshow(testingInput[i,...].reshape(n0, n1))
-	pylab.title('{} ({})'.format(testingOutput[i] + minNumDots, numDots[i]))
+	pylab.title('{} ({})'.format(testingOutput[i] + minNumDots, c[i] + minNumDots))
 	pylab.axis('off')
 pylab.show()
 
