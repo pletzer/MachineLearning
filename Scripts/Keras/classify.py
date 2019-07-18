@@ -5,6 +5,7 @@ import argparse
 import cv2
 import glob
 import pandas
+import re
 
 def loadImages(filenames):
 	"""
@@ -18,8 +19,11 @@ def loadImages(filenames):
 	numImages = len(filenames)
 	inputData = numpy.zeros((numImages, n0*n1), numpy.float32)
 	for i in range(numImages):
-		im = cv2.imread(filenames[i])
-		inputData[i,:] = (im.mean(axis=2)/255.).flat
+		fn = filenames[i]
+		# extract the index from the file name
+		index = int(re.search(r'img(\d+).jpg', fn).group(1)) - 1
+		im = cv2.imread(fn)
+		inputData[index,:] = (im.mean(axis=2)/255.).flat
 	return inputData
 
 def getImageSizes(filename):
@@ -37,6 +41,7 @@ trainingDir = dataDir + 'train/'
 
 df = pandas.read_csv(trainingDir + 'train.csv')
 categories = df['numberOfDots'].unique()
+categories.sort()
 minNumDots = min(categories)
 maxNumDots = max(categories)
 numCategories = maxNumDots - minNumDots + 1
@@ -56,7 +61,7 @@ n0, n1 = getImageSizes(trainingDir + 'img1.jpg')
 print('Number of training images: {}'.format(trainingInput.shape[0]))
 print('Number of testing images : {}'.format(testingInput.shape[0]))
 print('Image size               : {} x {}'.format(n0, n1))
-print('Categories               : {}'.format(categories))
+print('Categories               : {} min/max = {}/{}'.format(categories, minNumDots, maxNumDots))
 
 clf = keras.Sequential([
     #keras.layers.Flatten(input_shape=(n0, n1)),
@@ -75,15 +80,35 @@ predictions = clf.predict(testingInput)
 
 # predictions returns an array of probabilities for each label
 bestGuessInds = numpy.argmax(predictions, axis=1)
-cats = numpy.array([minNumDots + i for i in range(numCategories)])
-numDots = cats[bestGuessInds]
+cats = numpy.array([i for i in range(numCategories)])
+c = cats[bestGuessInds]
+print(cats)
+print(predictions[:5, :])
+print(c[:5])
 
 # compute score
-diffs = (numDots - testingOutput)**2
+diffs = (c - testingOutput)**2
 score = diffs.sum()
 numFailures = (diffs != 0).sum()
 
 print('score = {} number of failures = {}'.format(score, numFailures))
+
+print('prediction for the first 5 images: {}'.format(trainingOutput[:5] + 1))
+
+# plot training dataset
+from matplotlib import pylab
+for i in range(10):
+	pylab.subplot(2, 10, i + 1)
+	pylab.imshow(trainingInput[i,...].reshape(n0, n1))
+	pylab.title('trng {}'.format(trainingOutput[i] + minNumDots))
+	pylab.axis('off')
+	pylab.subplot(2, 10, 10 + i + 1)
+	pylab.imshow(testingInput[i,...].reshape(n0, n1))
+	pylab.title('test {} ({})'.format(testingOutput[i] + minNumDots, c[i] + minNumDots))
+	pylab.axis('off')
+pylab.show()
+
+
 
 
 
