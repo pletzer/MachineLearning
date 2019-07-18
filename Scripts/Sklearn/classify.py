@@ -1,5 +1,5 @@
 import numpy
-from sklearn import svm
+from sklearn import svm, metrics
 import argparse
 import cv2
 import glob
@@ -22,6 +22,7 @@ def loadImages(filenames):
 		# extract the index from the file name
 		index = int(re.search(r'img(\d+).jpg', fn).group(1)) - 1
 		im = cv2.imread(fn)
+    # average the R, G, B channels and flatten array
 		inputData[index,:] = (im.mean(axis=2)/255.).flat
 	return inputData
 
