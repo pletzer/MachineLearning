@@ -6,6 +6,9 @@ import cv2
 import glob
 import pandas
 import re
+from numpy.random import seed
+
+seed(13435)
 
 def loadImages(filenames):
 	"""
@@ -73,7 +76,7 @@ clf.compile(optimizer='adam',
             loss='sparse_categorical_crossentropy',
             metrics=['accuracy'])
 # now train
-clf.fit(trainingInput, trainingOutput, epochs=5)
+clf.fit(trainingInput, trainingOutput, epochs=10)
 
 # test
 predictions = clf.predict(testingInput)
@@ -93,18 +96,16 @@ numFailures = (diffs != 0).sum()
 
 print('score = {} number of failures = {}'.format(score, numFailures))
 
-print('prediction for the first 5 images: {}'.format(trainingOutput[:5] + 1))
+print('known number of dots for the first 5 images   : {}'.format(testingOutput[:5] + 1))
+print('inferred number of dots for the first 5 images: {}'.format(c[:5] + 1))
 
 # plot training/test dataset
 from matplotlib import pylab
-for i in range(10):
-	pylab.subplot(2, 10, i + 1)
-	pylab.imshow(trainingInput[i,...].reshape(n0, n1))
-	pylab.title('trng {}'.format(trainingOutput[i] + minNumDots))
-	pylab.axis('off')
-	pylab.subplot(2, 10, 10 + i + 1)
+n = 30
+for i in range(n):
+	pylab.subplot(n//10, 10, i + 1)
 	pylab.imshow(testingInput[i,...].reshape(n0, n1))
-	pylab.title('test {} ({})'.format(testingOutput[i] + minNumDots, c[i] + minNumDots))
+	pylab.title('{} ({})'.format(testingOutput[i] + minNumDots, c[i] + minNumDots))
 	pylab.axis('off')
 pylab.show()
 
