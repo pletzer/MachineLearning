@@ -60,7 +60,7 @@ for line in $(cat ../../Data/Synthetic/Dots/test/test.csv); do
     echo "classifying img${id}.jpg"
     python label_image.py --image=../../Data/Synthetic/Dots/test/img${id}.jpg \
        --graph=output/graph.pb --labels=output/labels.txt \
-       --input_layer=Placeholder --output_layer=final_result >& result.txt
+       --input_layer=Placeholder --output_layer=final_result > result.txt
     # find the most likely label
     gotNumDots=$(python findNumDots.py result.txt)
     diffSquare=$(python -c "print(($numDots - $gotNumDots)**2)")
