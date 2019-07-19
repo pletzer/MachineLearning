@@ -113,7 +113,7 @@ from matplotlib import pylab
 n = 30
 for i in range(n):
 	pylab.subplot(n//10, 10, i + 1)
-	pylab.imshow(testingInput[i,...].reshape(n0, n1))
+	pylab.imshow(testingInput[i,...].mean(axis=2))
 	pylab.title('{} ({:.1f})'.format(int(exactNumDots[i]), predictedNumDots[i]))
 	pylab.axis('off')
 pylab.show()
