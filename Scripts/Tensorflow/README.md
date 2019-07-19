@@ -50,7 +50,7 @@ tensorboard --logdir=/tmp/retrain_logs/
 # Test the classification
 
 ```
-score="0"
+varError="0"
 numFailures="0"
 for line in $(cat ../../Data/Synthetic/Dots/test/test.csv); do
   id=$(echo $line | awk -F, '{print $2}')
@@ -60,7 +60,7 @@ for line in $(cat ../../Data/Synthetic/Dots/test/test.csv); do
     echo "classifying img${id}.jpg"
     python label_image.py --image=../../Data/Synthetic/Dots/test/img${id}.jpg \
        --graph=output/graph.pb --labels=output/labels.txt \
-       --input_layer=Placeholder --output_layer=final_result >& result.txt
+       --input_layer=Placeholder --output_layer=final_result > result.txt
     # find the most likely label
     gotNumDots=$(python findNumDots.py result.txt)
     diffSquare=$(python -c "print(($numDots - $gotNumDots)**2)")
@@ -70,10 +70,10 @@ for line in $(cat ../../Data/Synthetic/Dots/test/test.csv); do
     else
       echo "found $numDots dots (correct)"
     fi
-    # update the score
-    score=$(python -c "print($score + $diffSquare)")
+    # update the varError
+    varError=$(python -c "print($varError + $diffSquare)")
   fi
 done
-echo "score is $score"
+echo "variance of error is $varError"
 echo "number of failures: $numFailures"
 ```

@@ -28,7 +28,7 @@ Rscript DrawDots.R -o ../../Data/Synthetic/Dots/test -c test.csv -n 200 -r 1 -R 
 ### Submit your solution
 
  1. Fork this repo
- 2. Put your solution under directory Y/X where X is a name of your choice. Provide a README.md file that describes yopur solution, the software dependencies and how to install them, and a step by step description on how to run your solution. Use template Z as an example.
+ 2. Put your solution under directory Scripts/X where X is a name of your choice. Provide a README.md file that describes yopur solution, the software dependencies and how to install them, and a step by step description on how to run your solution. Use template Z as an example.
  3. Create a pull request
 
 ## How solutions are evaluated
@@ -38,9 +38,3 @@ The best solution has the lowest variance = sum (num of circles detected - numbe
 ## FAQs
 
 
-
-
-
-
-
- 
