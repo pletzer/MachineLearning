@@ -72,12 +72,12 @@ clf.fit(trainingInput, trainingOutput)
 prediction = clf.predict(testingInput)
 numDots = prediction + 1
 
-# compute score
+# compute varError
 diffs = (numDots - testingOutput)**2
-score = diffs.sum()
+varError = diffs.sum()
 numFailures = (diffs != 0).sum()
 
-print('score = {} number of failures = {}'.format(score, numFailures))
+print('variance of error = {} number of failures = {}'.format(varError, numFailures))
 
 print('known number of dots for the first 5 testing images: {}'.format(testingOutput[:5] + 1))
 print('inferred number dots for the first 5 testing images: {}'.format(prediction[:5] + 1))

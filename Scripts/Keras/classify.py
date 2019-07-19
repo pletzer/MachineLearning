@@ -89,12 +89,12 @@ print(cats)
 print(predictions[:5, :])
 print(c[:5])
 
-# compute score
+# compute varError
 diffs = (c - testingOutput)**2
-score = diffs.sum()
+varError = diffs.sum()
 numFailures = (diffs != 0).sum()
 
-print('score = {} number of failures = {}'.format(score, numFailures))
+print('variance of error = {} number of failures = {}'.format(varError, numFailures))
 
 print('known number of dots for the first 5 images   : {}'.format(testingOutput[:5] + 1))
 print('inferred number of dots for the first 5 images: {}'.format(c[:5] + 1))

@@ -50,7 +50,7 @@ tensorboard --logdir=/tmp/retrain_logs/
 # Test the classification
 
 ```
-score="0"
+varError="0"
 numFailures="0"
 for line in $(cat ../../Data/Synthetic/Dots/test/test.csv); do
   id=$(echo $line | awk -F, '{print $2}')
@@ -70,10 +70,10 @@ for line in $(cat ../../Data/Synthetic/Dots/test/test.csv); do
     else
       echo "found $numDots dots (correct)"
     fi
-    # update the score
-    score=$(python -c "print($score + $diffSquare)")
+    # update the varError
+    varError=$(python -c "print($varError + $diffSquare)")
   fi
 done
-echo "score is $score"
+echo "variance of error is $varError"
 echo "number of failures: $numFailures"
 ```
