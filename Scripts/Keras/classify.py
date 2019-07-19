@@ -6,9 +6,8 @@ import cv2
 import glob
 import pandas
 import re
-from numpy.random import seed
 
-seed(13435)
+numpy.random.seed(13435)
 
 def loadImages(filenames):
 	"""
@@ -23,7 +22,7 @@ def loadImages(filenames):
 	inputData = numpy.zeros((numImages, n0*n1), numpy.float32)
 	for i in range(numImages):
 		fn = filenames[i]
-		# extract the index from the file name
+		# extract the index from the file name, note: the index starts with 1
 		index = int(re.search(r'img(\d+).jpg', fn).group(1)) - 1
 		im = cv2.imread(fn)
 		inputData[index,:] = (im.mean(axis=2)/255.).flat
@@ -49,14 +48,14 @@ minNumDots = min(categories)
 maxNumDots = max(categories)
 numCategories = maxNumDots - minNumDots + 1
 # labels start at zero
-trainingOutput = numpy.array(df['numberOfDots']) - minNumDots
+trainingOutput = (numpy.array(df['numberOfDots'], numpy.float32) - minNumDots)/(maxNumDots - minNumDots)
 trainingInput = loadImages(glob.glob(trainingDir + 'img*.jpg'))
 
 testingDir = dataDir + 'test/'
 df = pandas.read_csv(testingDir + 'test.csv')
 numCategories = len(categories)
 # labels start at zero
-testingOutput = numpy.array(df['numberOfDots']) - minNumDots
+testingOutput = (numpy.array(df['numberOfDots'], numpy.float32) - minNumDots)/(maxNumDots - minNumDots)
 testingInput = loadImages(glob.glob(testingDir + 'img*.jpg'))
 
 # train the model
@@ -66,38 +65,34 @@ print('Number of testing images : {}'.format(testingInput.shape[0]))
 print('Image size               : {} x {}'.format(n0, n1))
 print('Categories               : {} min/max = {}/{}'.format(categories, minNumDots, maxNumDots))
 
-clf = keras.Sequential([
-    #keras.layers.Flatten(input_shape=(n0, n1)),
-    keras.layers.Dense(128, activation=tf.nn.relu),
-    keras.layers.Dense(numCategories, activation=tf.nn.softmax)
-])
+
+clf = keras.Sequential()
+clf.add( keras.layers.Dense(128, input_shape=(n0*n1,)) )
+clf.add( keras.layers.Dense(64) )
+clf.add( keras.layers.Dense(32) )
+clf.add( keras.layers.Dense(1) )
 
 clf.compile(optimizer='adam',
-            loss='sparse_categorical_crossentropy',
+	        loss='mean_squared_error', 
             metrics=['accuracy'])
 # now train
-clf.fit(trainingInput, trainingOutput, epochs=10)
+clf.fit(trainingInput, trainingOutput, epochs=50)
 
 # test
-predictions = clf.predict(testingInput)
+predictions = numpy.squeeze(clf.predict(testingInput))
 
-# predictions returns an array of probabilities for each label
-bestGuessInds = numpy.argmax(predictions, axis=1)
-cats = numpy.array([i for i in range(numCategories)])
-c = cats[bestGuessInds]
-print(cats)
-print(predictions[:5, :])
-print(c[:5])
+predictedNumDots = (maxNumDots - minNumDots)*predictions + minNumDots
+exactNumDots = (maxNumDots - minNumDots)*testingOutput + minNumDots
 
 # compute varError
-diffs = (c - testingOutput)**2
+diffs = (numpy.round(predictedNumDots) - exactNumDots)**2
 varError = diffs.sum()
 numFailures = (diffs != 0).sum()
 
 print('variance of error = {} number of failures = {}'.format(varError, numFailures))
 
-print('known number of dots for the first 5 images   : {}'.format(testingOutput[:5] + 1))
-print('inferred number of dots for the first 5 images: {}'.format(c[:5] + 1))
+print('known number of dots for the first 5 images   : {}'.format(exactNumDots[:5]))
+print('inferred number of dots for the first 5 images: {}'.format(predictedNumDots[:5]))
 
 # plot training/test dataset
 from matplotlib import pylab
@@ -105,7 +100,7 @@ n = 30
 for i in range(n):
 	pylab.subplot(n//10, 10, i + 1)
 	pylab.imshow(testingInput[i,...].reshape(n0, n1))
-	pylab.title('{} ({})'.format(testingOutput[i] + minNumDots, c[i] + minNumDots))
+	pylab.title('{} ({:.1f})'.format(int(exactNumDots[i]), predictedNumDots[i]))
 	pylab.axis('off')
 pylab.show()
 
