@@ -68,15 +68,15 @@ print('Categories               : {} min/max = {}/{}'.format(categories, minNumD
 
 clf = keras.Sequential()
 
-clf.add( keras.layers.Conv2D(8, kernel_size=(3,3), strides=(1,1),
-                             padding='same', data_format='channels_last', activation='relu') )
-clf.add( keras.layers.MaxPooling2D(pool_size=(2, 2)) )
-
-clf.add( keras.layers.Conv2D(16, kernel_size=(3,3), strides=(1,1),
-                             padding='same', data_format='channels_last', activation='relu') )
-clf.add( keras.layers.MaxPooling2D(pool_size=(2, 2)) )
-
 clf.add( keras.layers.Conv2D(32, kernel_size=(3,3), strides=(1,1),
+                             padding='same', data_format='channels_last', activation='relu') )
+clf.add( keras.layers.MaxPooling2D(pool_size=(2, 2)) )
+
+clf.add( keras.layers.Conv2D(128, kernel_size=(3,3), strides=(1,1),
+                             padding='same', data_format='channels_last', activation='relu') )
+clf.add( keras.layers.MaxPooling2D(pool_size=(2, 2)) )
+
+clf.add( keras.layers.Conv2D(256, kernel_size=(3,3), strides=(1,1),
                              padding='same', data_format='channels_last', activation='relu') )
 clf.add( keras.layers.MaxPooling2D(pool_size=(2, 2)) )
 
