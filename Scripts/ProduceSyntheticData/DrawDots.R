@@ -43,9 +43,8 @@ for(i in 1:options$numberOfImages) {
     x <- grid$x[my.sample]
     y <- grid$y[my.sample]
 
-    # random dot size (option removed)
-    # extent <- runif(numDots, min = 0.5, max = 2)
-    extent = 1
+    # random dot size
+    extent <- runif(numDots, min = 0.2, max = 1)
     
     df[i,"imageId"] = i
     df[i, "numberOfDots"] = numDots
