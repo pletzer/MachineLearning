@@ -19,13 +19,13 @@ def loadImages(filenames):
 	im = cv2.imread(filenames[0])
 	n0, n1 = im.shape[:2]
 	numImages = len(filenames)
-	inputData = numpy.zeros((numImages, n0*n1), numpy.float32)
+	inputData = numpy.zeros((numImages, n0, n1, 3), numpy.float32)
 	for i in range(numImages):
 		fn = filenames[i]
 		# extract the index from the file name, note: the index starts with 1
 		index = int(re.search(r'img(\d+).jpg', fn).group(1)) - 1
 		im = cv2.imread(fn)
-		inputData[index,:] = (im.mean(axis=2)/255.).flat
+		inputData[index,...] = im / 255.
 	return inputData
 
 def getImageSizes(filename):
@@ -67,16 +67,30 @@ print('Categories               : {} min/max = {}/{}'.format(categories, minNumD
 
 
 clf = keras.Sequential()
-clf.add( keras.layers.Dense(128, input_shape=(n0*n1,)) )
-clf.add( keras.layers.Dense(64) )
-clf.add( keras.layers.Dense(32) )
+
+clf.add( keras.layers.Conv2D(8, kernel_size=(3,3), strides=(1,1),
+                             padding='same', data_format='channels_last', activation='relu') )
+clf.add( keras.layers.MaxPooling2D(pool_size=(2, 2)) )
+
+clf.add( keras.layers.Conv2D(16, kernel_size=(3,3), strides=(1,1),
+                             padding='same', data_format='channels_last', activation='relu') )
+clf.add( keras.layers.MaxPooling2D(pool_size=(2, 2)) )
+
+clf.add( keras.layers.Conv2D(32, kernel_size=(3,3), strides=(1,1),
+                             padding='same', data_format='channels_last', activation='relu') )
+clf.add( keras.layers.MaxPooling2D(pool_size=(2, 2)) )
+
+clf.add( keras.layers.Flatten() )
 clf.add( keras.layers.Dense(1) )
+
+#clf.add( keras.layers.Activation('softmax') )
 
 clf.compile(optimizer='adam',
 	        loss='mean_squared_error', 
             metrics=['accuracy'])
+
 # now train
-clf.fit(trainingInput, trainingOutput, epochs=50)
+clf.fit(trainingInput, trainingOutput, epochs=10)
 
 # test
 predictions = numpy.squeeze(clf.predict(testingInput))
@@ -99,7 +113,7 @@ from matplotlib import pylab
 n = 30
 for i in range(n):
 	pylab.subplot(n//10, 10, i + 1)
-	pylab.imshow(testingInput[i,...].reshape(n0, n1))
+	pylab.imshow(testingInput[i,...].mean(axis=2))
 	pylab.title('{} ({:.1f})'.format(int(exactNumDots[i]), predictedNumDots[i]))
 	pylab.axis('off')
 pylab.show()
