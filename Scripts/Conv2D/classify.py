@@ -19,13 +19,13 @@ def loadImages(filenames):
 	im = cv2.imread(filenames[0])
 	n0, n1 = im.shape[:2]
 	numImages = len(filenames)
-	inputData = numpy.zeros((numImages, n0, n1, 3), numpy.float32)
+	inputData = numpy.zeros((numImages, n0, n1, 1), numpy.float32)
 	for i in range(numImages):
 		fn = filenames[i]
 		# extract the index from the file name, note: the index starts with 1
 		index = int(re.search(r'img(\d+).jpg', fn).group(1)) - 1
 		im = cv2.imread(fn)
-		inputData[index,...] = im / 255.
+		inputData[index,...] = im.mean(axis=2).reshape(n0, n1, 1) / 255.
 	return inputData
 
 def getImageSizes(filename):
@@ -68,15 +68,15 @@ print('Categories               : {} min/max = {}/{}'.format(categories, minNumD
 
 clf = keras.Sequential()
 
-clf.add( keras.layers.Conv2D(8, kernel_size=(3,3), strides=(1,1),
-                             padding='same', data_format='channels_last', activation='relu') )
-clf.add( keras.layers.MaxPooling2D(pool_size=(2, 2)) )
-
-clf.add( keras.layers.Conv2D(16, kernel_size=(3,3), strides=(1,1),
-                             padding='same', data_format='channels_last', activation='relu') )
-clf.add( keras.layers.MaxPooling2D(pool_size=(2, 2)) )
-
 clf.add( keras.layers.Conv2D(32, kernel_size=(3,3), strides=(1,1),
+                             padding='same', data_format='channels_last', activation='relu') )
+clf.add( keras.layers.MaxPooling2D(pool_size=(2, 2)) )
+
+clf.add( keras.layers.Conv2D(128, kernel_size=(3,3), strides=(1,1),
+                             padding='same', data_format='channels_last', activation='relu') )
+clf.add( keras.layers.MaxPooling2D(pool_size=(2, 2)) )
+
+clf.add( keras.layers.Conv2D(256, kernel_size=(3,3), strides=(1,1),
                              padding='same', data_format='channels_last', activation='relu') )
 clf.add( keras.layers.MaxPooling2D(pool_size=(2, 2)) )
 
