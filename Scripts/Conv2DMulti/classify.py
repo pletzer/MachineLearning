@@ -48,14 +48,14 @@ minNumDots = min(categories)
 maxNumDots = max(categories)
 numCategories = maxNumDots - minNumDots + 1
 # labels start at zero
-trainingOutput = (numpy.array(df['numberOfDots'], numpy.float32) - minNumDots)/(maxNumDots - minNumDots)
+trainingOutput = numpy.array(df['numberOfDots'], numpy.int8) - minNumDots
 trainingInput = loadImages(glob.glob(trainingDir + 'img*.jpg'))
 
 testingDir = dataDir + 'test/'
 df = pandas.read_csv(testingDir + 'test.csv')
 numCategories = len(categories)
 # labels start at zero
-testingOutput = (numpy.array(df['numberOfDots'], numpy.float32) - minNumDots)/(maxNumDots - minNumDots)
+testingOutput = numpy.array(df['numberOfDots'], numpy.int8) - minNumDots
 testingInput = loadImages(glob.glob(testingDir + 'img*.jpg'))
 
 # train the model
@@ -81,13 +81,12 @@ clf.add( keras.layers.Conv2D(256, kernel_size=(3,3), strides=(1,1),
 clf.add( keras.layers.MaxPooling2D(pool_size=(2, 2)) )
 
 clf.add( keras.layers.Flatten() )
-clf.add( keras.layers.Dense(numCategories, activation='sigmoid') )
+clf.add( keras.layers.Dense(numCategories, activation='softmax') )
 
 #clf.add( keras.layers.Activation('softmax') )
 
 clf.compile(optimizer='adam',
-	        loss='mean_squared_error',
-	        #loss='sparse_categorical_crossentropy', 
+	        loss='sparse_categorical_crossentropy', 
             metrics=['accuracy'])
 
 print('training output = ', trainingOutput)
@@ -105,7 +104,7 @@ bestInds = numpy.argmax(predictions, axis=1)
 print('bestInds = ', bestInds)
 predictedNumDots = bestInds + minNumDots
 print('predictedNumDots = ', predictedNumDots)
-exactNumDots = (maxNumDots - minNumDots)*testingOutput + minNumDots
+exactNumDots = testingOutput + minNumDots
 print('exact num dots = ', exactNumDots)
 
 # compute varError
